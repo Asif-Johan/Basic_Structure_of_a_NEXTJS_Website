@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     
 
         // return user
-        return NextResponse.json(user, {status: 200});
+        // return NextResponse.json(user, {status: 200});
     } catch (error: any) {
         return NextResponse.json({error: error.message}, {status: 500})
         console.log(error);
