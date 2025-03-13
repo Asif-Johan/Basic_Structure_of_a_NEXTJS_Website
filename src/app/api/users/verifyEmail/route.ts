@@ -10,13 +10,13 @@ export async function POST(request: NextRequest) {
     try {
         const reqBody = await request.json();
         const { token } = reqBody;
-        console.log(reqBody);
+        // console.log(reqBody);
 
         //find user
         const user = await User.findOne({ verifyToken: token,
             verifyTokenExpiry: { $gt: Date.now() }
          });
-         console.log("User found:", user);
+        //  console.log("User found:", user);
         if (!user) {
             return NextResponse.json({
                 error: "User not found"

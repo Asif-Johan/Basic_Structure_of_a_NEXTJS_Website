@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 
 export const sendEmail = async ({email, emailType, userId}:any) => {
     try {
+        //hash token 
         const hashedToken = await bcrypt.hash(userId.toString(), 10);
 
         //forgotpassword token
@@ -35,18 +36,47 @@ export const sendEmail = async ({email, emailType, userId}:any) => {
     }
   });
 
-  const mailOptions = {
-    from: "N5o9O@example.com",
-    to: email,
-    subject: emailType === "VERIFY" ? "Verify your email" : "Reset your password",
-    html: `<p>Click <a href="${process.env.DOMAIN}/verifyemail?token=${hashedToken}">here</a> to ${
-        emailType === "VERIFY" ? "verify your email" : "reset your password"
-      } or copy and paste the link below in your browser. <br> ${process.env.DOMAIN}/verifyemail?token=${hashedToken}</p>`
-  };
-
+  if (emailType === "VERIFY") {
+    const mailOptions = {
+        from: "N5o9O@example.com",
+        to: email,
+        subject: "Verify your email",
+        html: `<p>Click <a href="${process.env.DOMAIN}/verifyemail?token=${hashedToken}">here</a> to verify your email</p>
+        <p>Or follow this link: ${process.env.DOMAIN}/verifyemail?token=${hashedToken}</p>
+        `
+      };
+    
   const mailResponse = await transport.sendMail(mailOptions);
-
   return mailResponse;
+  }
+
+  if (emailType === "RESET") {
+    const mailOptions = {
+        from: "N5o9O@example.com",
+        to: email,
+        subject: "Reset your password",
+        html: `<p>Click <a href="${process.env.DOMAIN}/resetPass?token=${hashedToken}">here</a> to reset your password</p>
+        <p>Or follow this link: ${process.env.DOMAIN}/resetPass?token=${hashedToken}</p>
+        `
+      };
+    
+  const mailResponse = await transport.sendMail(mailOptions);
+  return mailResponse;
+  }
+
+
+//   const mailOptions = {
+//     from: "N5o9O@example.com",
+//     to: email,
+//     subject: emailType === "VERIFY" ? "Verify your email" : "Reset your password",
+//     html: `<p>Click <a href="${process.env.DOMAIN}/verifyemail?token=${hashedToken}">here</a> to ${emailType === "VERIFY" ? "verify your email" : "reset your password"
+//       } or copy and paste the link below in your browser. <br> ${process.env.DOMAIN}/verifyemail?token=${hashedToken}</p>
+//   `
+// };
+
+
+
+
 
     } catch (error: any) {
         throw new Error(error.message);

@@ -7,14 +7,14 @@ export default function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
 
     //get if the path is public path
-    const isPublicPath = path === '/login' || path === '/signup' || path === '/verifyemail';
+    const isPublicPath = path === '/login' || path === '/signup' || path === '/verifyemail' || path === '/resetPass';
 
     //get the token
     const token = request.cookies.get('token')?.value || '';
 
     //redirect if public path and has token
     if(isPublicPath && token) {
-        return NextResponse.redirect(new URL('/', request.nextUrl));
+        return NextResponse.redirect(new URL('/profile', request.nextUrl));
     }
 
     //redirect if not public path and dont have token
@@ -32,5 +32,6 @@ export const config = {
     '/login',
     '/signup',
     '/verifyemail',
+    '/resetPass',
   ]
 }
