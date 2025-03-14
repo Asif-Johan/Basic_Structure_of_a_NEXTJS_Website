@@ -1,8 +1,8 @@
 ## To COPY and USE this repo:
 * git clone this repo
 * open vscode, go to the directory
-* wirte "git install"
-* write "git install next"
+* wirte "npm install"
+* write "npm install next"
 * go to the .env file and change the environment variables according to your need (currently it says "something for all")
 * then run "npm run dev" on the terminal
 * You are good to go
