@@ -7,6 +7,9 @@
 * then run "npm run dev" on the terminal
 * You are good to go
 
+  **make sure when you push, you add the ".env*" in your .gitignore file**
+
+
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
