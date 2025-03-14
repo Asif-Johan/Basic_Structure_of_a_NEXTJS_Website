@@ -2,50 +2,38 @@ import { dbConfigConnect } from "@/dbConfig/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/userModel";
 
-
 dbConfigConnect();
-
 
 export async function POST(request: NextRequest) {
     try {
+        // Get data
         const reqBody = await request.json();
-        const { token } = reqBody;
-        // console.log(reqBody);
+        const { verifyToken } = reqBody;
 
-        //find user
-        const user = await User.findOne({ verifyToken: token,
-            verifyTokenExpiry: { $gt: Date.now() }
-         });
-        //  console.log("User found:", user);
-        if (!user) {
-            return NextResponse.json({
-                error: "User not found"
-            })
-        }
+        // console.log("Request body: ", reqBody, "Token: ", verifyToken); // we have found verify token in reqBody
 
-        //update user
-        user.isVerified = true;
-        user.verifyToken = undefined;
-        user.verifyTokenExpiry = undefined;
+        // find user based on token and update isVerified to true
+           //database querry and update
+           const updatedUser = await User.findOneAndUpdate(
+            { verifyToken,
+              verifyTokenExpiry: { $gt: Date.now() }
 
-        await user.save();
-        console.log("User updated and saved:", user);
+             },
+            { $set: { isVerified: true,
+                verifyToken: "",
+             } },
+            { new: true } // Returns the updated document
+          );
+
+          console.log("Updated User: ",updatedUser);
+          
 
 
-        return NextResponse.json({
-            message: "Email Verified Successfully",
-            success: true,
-            user: user
-        })
-
-        
-
-
+        // If everything is fine, send a response
+        return NextResponse.json({ message: "Token received successfully" }, { status: 200 });
         
     } catch (error: any) {
-        return NextResponse.json({
-            error: error.message
-        })
+        console.log(error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
-
 }

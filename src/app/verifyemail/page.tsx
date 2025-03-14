@@ -1,58 +1,42 @@
 "use client"
 import Link from "next/link";
 import axios from "axios";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import React , { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function VerifyEmailPage() {
-    const [token, setToken] = useState("");
-    const [verified, setVerified] = useState(false);
-    const [error, setError] = useState(false);
+const router = useRouter();
+const [verifyToken, setVerifyToken] = useState("kk");
 
-    const verifyUserEmail = async () => {
-        try {
-            const response = await axios.post("/api/users/verifyemail", { token });
-            toast.success(response.data.message);
-            setVerified(true);
-         
-        } catch (error: any) {
-            setError(true);
-            console.log(error.response.data);
-            toast.error(error.response.data.message);
-        }
-    };
 
+//function to verify user
+const verifyUser = async () => {
+    const urlToken = new URLSearchParams(window.location.search).get("token");
+    console.log("front end: form url: ",urlToken);
+
+    try {
+        const response = await axios.post("/api/users/verifyEmail", {verifyToken: urlToken});
+        console.log("VErify SuCCess", response.data);
+        toast.success("User Verified");
+        router.push("/login");
+
+        console.log(response.data);
+    } catch (error) {
+        toast.error("Invalid credentials");
+        console.log(error);
+    }
+
+
+  }
 
    
-    useEffect(() => {
-        const urlToken = new URLSearchParams(window.location.search).get("token");
-        if (urlToken) setToken(urlToken);
-    }, []);
-    
-    useEffect(() => {
-        if (token.length > 0) {
-            verifyUserEmail();
-        }
-    }, [token]);
-
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen py-2">
-            <h2 className="text-2xl font-bold">Verify Email</h2>
-            <h3>{token? `${token}` : "No token found"}</h3>
+        <div className="text-3xl flex flex-col items-center justify-center min-h-screen text-blue-700">
+            <h1>Click to verify email</h1>
+            <button onClick={verifyUser} className="bg-blue-500 hover:bg-blue-700 text-white font-bold text-md mt-2 py-1 px-4 rounded">Verify</button>
 
-            {verified && (
-                <div>
-                    <h2 className="text-2xl font-bold">Email Verified</h2>
-                    <Link href="/login">Login</Link>
-                </div>
-            )}
-
-            {error && (
-                <div>
-                    <h2 className="text-2xl font-bold">Error</h2>
-                </div>
-            )}
         </div>
-    );
+    )
 }
