@@ -1,3 +1,13 @@
+## To COPY and USE this repo:
+* git clone this repo
+* open vscode, go to the directory
+* wirte "git install"
+* write "git install next"
+* go to the .env file and change the environment variables according to your need (currently it says "something for all")
+* then run "npm run dev" on the terminal
+* You are good to go
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
